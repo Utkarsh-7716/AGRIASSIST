@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment | AgriAssist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input[type="text"], input[type="month"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .payment-options {
+      margin: 20px 0;
+    }
+
+    .upi-box {
+      display: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .note {
+      font-size: 0.9em;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Payment Checkout</h2>
+    <p id="productInfo"></p>
+
+    <label>Select Payment Method:</label>
+    <div class="payment-options">
+      <input type="radio" id="upi" name="payment" value="upi" checked onchange="togglePaymentFields()" />
+      <label for="upi">UPI</label><br>
+
+      <input type="radio" id="cod" name="payment" value="cod" onchange="togglePaymentFields()" />
+      <label for="cod">Cash on Delivery</label>
+    </div>
+
+    <!-- UPI Fields -->
+    <div id="upiFields" class="upi-box">
+      <label for="upiId">Enter UPI ID:</label>
+      <input type="text" id="upiId" placeholder="example@upi" />
+      <p class="note">UPI ID must be valid to complete payment.</p>
+    </div>
+
+    <button onclick="submitPayment()">Confirm Order</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get("product");
+    const price = params.get("price");
+
+    document.getElementById("productInfo").textContent = `Buying: ${product} - ${price}`;
+    togglePaymentFields(); // initialize visibility
+
+    function togglePaymentFields() {
+      const upiOption = document.getElementById('upi').checked;
+      document.getElementById('upiFields').style.display = upiOption ? 'block' : 'none';
+    }
+
+    function submitPayment() {
+      const selectedMethod = document.querySelector('input[name="payment"]:checked').value;
+
+      if (selectedMethod === 'upi') {
+        const upiId = document.getElementById('upiId').value.trim();
+        if (!upiId) {
+          alert("Please enter a valid UPI ID.");
+          return;
+        }
+        alert(`✅ Payment successful via UPI (${upiId}).\nThank you for your order of ${product}!`);
+      } else {
+        alert(`🛵 Order placed with Cash on Delivery.\nYour ${product} will be delivered soon!`);
+      }
+
+      window.location.href = "index.html"; // Go back to home
+    }
+  </script>
+</body>
+</html>
